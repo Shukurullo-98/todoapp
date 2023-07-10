@@ -11,23 +11,4 @@ class MyColors{
   static const C_FCA82F = Color(0xFFFCA82F);
   static const C_E5E5E5 = Color(0xFFE5E5E5);
 
-
-  // gradient
-
-  static const redBar = [
-    Color(0xFFEE7090),
-    Color(0xFFEC8870),
-  ];
-
-  static const blueBar = [
-    Color(0xFF4F78EE),
-    Color(0xFF11B1FB),
-  ];
-
-  static const purpleBar = [
-    Color(0xFFA48DD1),
-    Color(0xFFF2BDE9),
-  ];
-
-
 }
