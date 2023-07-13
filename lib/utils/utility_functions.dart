@@ -12,4 +12,11 @@ class UtilityFunctions {
         textColor: Colors.black,
         fontSize: 14
       );
+
+
+  static void filedFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus){
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
 }
