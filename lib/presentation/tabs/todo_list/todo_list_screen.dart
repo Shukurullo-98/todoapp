@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_todo_app/data/repository.dart';
+import 'package:my_todo_app/models/category_moels.dart';
 import 'package:my_todo_app/models/todo_model.dart';
 import 'package:my_todo_app/utils/colors.dart';
 import 'package:my_todo_app/utils/style.dart';
@@ -16,10 +17,12 @@ class ToDoScreen extends StatefulWidget {
 
 class _ToDoScreenState extends State<ToDoScreen> {
   List<ToDoModel> myTodo = [];
+  List<CategoryModel> categories = [];
 
   @override
   void initState() {
     myTodo = MyRepository.myTodo;
+    categories = MyRepository.categories;
     super.initState();
   }
 
@@ -92,6 +95,9 @@ class _ToDoScreenState extends State<ToDoScreen> {
                               .copyWith(fontSize: 14, color: Colors.black45),
                         ))
                       ],
+                    ),
+                    Row(
+                      children: [Text("Category: ")],
                     )
                   ],
                 ),
@@ -101,3 +107,9 @@ class _ToDoScreenState extends State<ToDoScreen> {
         ));
   }
 }
+
+CategoryModel getCategory(List<CategoryModel> category, int categoryId) {
+  return category
+      .where((element) => element.categoryId == categoryId)
+      .toList()[0];
+ }
