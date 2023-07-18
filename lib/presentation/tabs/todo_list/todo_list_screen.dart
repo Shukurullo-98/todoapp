@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_todo_app/data/repository.dart';
+import 'package:my_todo_app/models/todo_model.dart';
+import 'package:my_todo_app/utils/colors.dart';
+import 'package:my_todo_app/utils/style.dart';
 
 class ToDoScreen extends StatefulWidget {
   const ToDoScreen({Key? key}) : super(key: key);
@@ -11,104 +15,89 @@ class ToDoScreen extends StatefulWidget {
 }
 
 class _ToDoScreenState extends State<ToDoScreen> {
-  final ImagePicker _picker = ImagePicker();
-  XFile? imageFile;
-  String imagePath = "";
+  List<ToDoModel> myTodo = [];
 
-  getFromGallery() async {
-    imageFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 500,
-      maxWidth: 500,
-    );
-    if (imageFile != null) {
-      setState(() {
-        imagePath = imageFile!.path;
-      });
-    }
-  }
-
-  getFromCamera() async {
-    imageFile = await _picker.pickImage(
-      source: ImageSource.camera,
-      maxHeight: 500,
-      maxWidth: 500,
-    );
-    if (imageFile != null) {
-      setState(() {
-        imagePath = imageFile!.path;
-      });
-    }
+  @override
+  void initState() {
+    myTodo = MyRepository.myTodo;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("ToDo Screen"),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
-      ),
-      body: Column(
-        children: [
-          const Text("Under development"),
-          TextButton(
-            onPressed: () {
-              selectImageDialog(context);
-            },
-            child: const Text("Select image"),
-          ),
-          SizedBox(
-            height: 300,
-            width: 300,
-            child: imagePath.isNotEmpty
-                ? Image.file(File(imagePath))
-                : const Icon(Icons.perm_identity_rounded),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void selectImageDialog(context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+        appBar: AppBar(
+          title: const Text("ToDo Screen"),
+          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
         ),
-      ),
-      backgroundColor: Colors.white,
-      builder: (BuildContext con) {
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            height: 150,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text("Gallery"),
-                  onTap: () {
-                    getFromGallery();
-                    Navigator.of(context).pop();
-                  },
+        body: ListView(
+          children: List.generate(
+            myTodo.length,
+            (index) {
+              var todo = myTodo[index];
+              return Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade300,
+                        spreadRadius: 4,
+                        blurRadius: 4,
+                        offset: const Offset(1, 2)),
+                  ],
                 ),
-                ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: const Text("Camera"),
-                  onTap: () {
-                    getFromCamera();
-                    Navigator.of(context).pop();
-                  },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          todo.title,
+                          style: MyTextStyle.interSemiBold600.copyWith(
+                            fontSize: 20,
+                            color: MyColors.black,
+                          ),
+                        ),
+                        const Expanded(child: SizedBox()),
+                        ...List.generate(
+                          todo.urgentLevel,
+                          (index) => const Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                        ...List.generate(
+                          5 - todo.urgentLevel,
+                          (index) => const Icon(
+                            Icons.star,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Text(
+                          todo.description,
+                          style: MyTextStyle.interRegular400
+                              .copyWith(fontSize: 14, color: Colors.black45),
+                        ))
+                      ],
+                    )
+                  ],
                 ),
-              ],
-            ),
-          );
-        });
-      },
-    );
+              );
+            },
+          ),
+        ));
   }
 }

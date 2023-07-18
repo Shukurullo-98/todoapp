@@ -10,6 +10,6 @@ class CategoryModel {
 
   final int categoryId;
   final String categoryName;
-  final String iconPath;
+  final IconData iconPath;
   final Color categoryColor;
 }

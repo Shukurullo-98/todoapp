@@ -5,6 +5,7 @@ class ToDoModel {
     required this.categoryId,
     required this.isDone,
     required this.dateTime,
+    required this.urgentLevel,
   });
 
   final String title;
@@ -12,4 +13,5 @@ class ToDoModel {
   final int categoryId;
   final bool isDone;
   final String dateTime;
+  final int urgentLevel;
 }
