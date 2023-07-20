@@ -38,6 +38,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
             myTodo.length,
             (index) {
               var todo = myTodo[index];
+              var category = getCategory(categories, todo.categoryId);
               return Container(
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(16),
@@ -96,9 +97,32 @@ class _ToDoScreenState extends State<ToDoScreen> {
                         ))
                       ],
                     ),
-                    Row(
+                    const Row(
                       children: [Text("Category: ")],
-                    )
+                    ),
+                    Row(
+                      children: [
+                        const Text("Category"),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Column(
+                          children: [
+                            Icon(category.iconPath),
+                            Text(category.categoryName),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Deadline:"),
+                        Text(todo.dateTime),
+                      ],
+                    ),
+
                   ],
                 ),
               );
@@ -112,4 +136,4 @@ CategoryModel getCategory(List<CategoryModel> category, int categoryId) {
   return category
       .where((element) => element.categoryId == categoryId)
       .toList()[0];
- }
+}
