@@ -8,10 +8,10 @@ class ToDoModel {
     required this.urgentLevel,
   });
 
-  final String title;
-  final String description;
-  final int categoryId;
-  final bool isDone;
-  final String dateTime;
-  final int urgentLevel;
+  String title;
+  String description;
+  int categoryId;
+  bool isDone;
+  String dateTime;
+  int urgentLevel;
 }

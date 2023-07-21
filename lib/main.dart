@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_todo_app/presentation/splash/splash_screen.dart';
-import 'package:my_todo_app/presentation/tabs/tab_box/tab_box.dart';
 
 void main() {
   runApp(const MyApp());

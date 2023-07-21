@@ -46,5 +46,14 @@ class MyRepository {
         isDone: false,
         dateTime: "18/07/2023",
         urgentLevel: 3),
+    ToDoModel(
+        title: "Work",
+        description: "Work",
+        categoryId: 1,
+        isDone: true,
+        dateTime: "20/07/2023",
+        urgentLevel: 4),
   ];
+
+  static void addDoneTodo(int index) => myTodo[index].isDone = true;
 }
