@@ -20,7 +20,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
   List<ToDoModel> myTodo = [];
   List<CategoryModel> categories = [];
   bool isDone = false;
-  int categorySelected = 0;
+  int categorySelected = -1;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -57,88 +57,92 @@ class _ToDoScreenState extends State<ToDoScreen> {
                   builder: (context) => SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height - 100,
-                    child: Container(
-                      margin: const EdgeInsets.all(16),
-                      child: Scaffold(
-                        body: Column(
-                          children: [
-                            ModalTopView(
-                                text: "Create new ToDo",
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: TextField(
-                                controller: titleController,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: TextField(
-                                controller: descriptionController,
-                                maxLines: 5,
-                                maxLength: 150,
-                                style: const TextStyle(
-                                  fontSize: 14,
+                    child: StatefulBuilder(
+                        builder: (BuildContext context, setState) {
+                      return Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: Container(
+                          margin: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              ModalTopView(
+                                  text: "Create new ToDo",
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  }),
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: TextField(
+                                  controller: titleController,
                                 ),
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                    hintText: 'Description here',
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none),
-                                    filled: true,
-                                    contentPadding: const EdgeInsets.all(8),
-                                    fillColor: const Color(0xFFD7D7D7)),
                               ),
-                            ),
-                            SizedBox(
-                              height: 95,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: categories.length,
-                                itemBuilder: (BuildContext context, index) {
-                                  return CategoryItem(
-                                    isSelected: false,
-                                    categoryModel: categories[index],
-                                    onTap: () {
-                                      setState(() {
-                                        categorySelected = index;
-                                      });
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SelectUrgentLevel(
-                                selectedStarsCount: 0, onChanged: (v) {}),
-                            const Expanded(child: SizedBox()),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: MyCustomButton(
-                                    buttonText: 'Cancel',
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: TextField(
+                                  controller: descriptionController,
+                                  maxLines: 5,
+                                  maxLength: 150,
+                                  style: const TextStyle(
+                                    fontSize: 14,
                                   ),
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                      hintText: 'Description here',
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      contentPadding: const EdgeInsets.all(8),
+                                      fillColor: const Color(0xFFD7D7D7)),
                                 ),
-                                Expanded(
-                                  child: MyCustomButton(
-                                    buttonText: 'Save',
-                                    onTap: () {},
+                              ),
+                              SizedBox(
+                                height: 95,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: categories.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return CategoryItem(
+                                      isSelected: categorySelected == index,
+                                      categoryModel: categories[index],
+                                      onTap: () {
+                                        setState(() {
+                                          categorySelected = index;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              SelectUrgentLevel(
+                                  selectedStarsCount: 0, onChanged: (v) {}),
+                              const Expanded(child: SizedBox()),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: MyCustomButton(
+                                      buttonText: 'Cancel',
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          ],
+                                  Expanded(
+                                    child: MyCustomButton(
+                                      buttonText: 'Save',
+                                      onTap: () {},
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 );
               },
@@ -154,7 +158,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
             return ToDoItem(
               todo: todo,
               category: category,
-              isDone: false,
+              isDone: isDone,
               onTap: () {
                 isDone = true;
                 setState(

@@ -6,11 +6,10 @@ import 'package:my_todo_app/utils/style.dart';
 class CategoryItem extends StatelessWidget {
   const CategoryItem({
     Key? key,
-    required this.categoryModel,
     required this.onTap,
     required this.isSelected,
+    required this.categoryModel,
   }) : super(key: key);
-
   final CategoryModel categoryModel;
   final VoidCallback onTap;
   final bool isSelected;
@@ -23,8 +22,8 @@ class CategoryItem extends StatelessWidget {
         children: [
           Container(
             width: 95,
-            margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: categoryModel.categoryColor,
               borderRadius: BorderRadius.circular(12),
@@ -51,15 +50,16 @@ class CategoryItem extends StatelessWidget {
             ),
           ),
           Visibility(
+            visible: isSelected,
             child: Positioned(
               right: 0,
               left: 0,
               bottom: 0,
               top: 0,
               child: Container(
-                color: MyColors.white.withOpacity(0.5),
+                color: MyColors.white.withOpacity(0.85),
                 child: const Center(
-                  child: Icon(Icons.check_circle_rounded,color: Colors.green,),
+                  child: Icon(Icons.check_circle_rounded,color: Colors.green,size: 34,),
                 ),
               ),
             ),
