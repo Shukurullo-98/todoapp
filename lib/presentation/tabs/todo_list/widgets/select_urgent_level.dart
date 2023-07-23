@@ -51,6 +51,7 @@ class _SelectUrgentLevelState extends State<SelectUrgentLevel> {
               onTap: () {
                 setState(() {
                   count = index + 1 + count;
+                  widget.onChanged.call(count);
                 });
               },
               child: const Icon(

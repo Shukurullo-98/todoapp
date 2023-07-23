@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await StorageRepository.getInstance();
     isLogged = StorageRepository.getBool("is_logged");
     isInitial = StorageRepository.getBool("is_initial");
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) {
         return isLogged ? TabBox() : isInitial == true?  LoginScreen(): OnBoardingScreen();
       }));
