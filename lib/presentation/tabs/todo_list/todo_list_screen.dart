@@ -7,6 +7,7 @@ import 'package:my_todo_app/models/category_moels.dart';
 import 'package:my_todo_app/models/todo_model.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/category_item.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/modal_top_view.dart';
+import 'package:my_todo_app/presentation/tabs/todo_list/widgets/select_date_item.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/select_urgent_level.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
 import 'package:my_todo_app/utils/colors.dart';
@@ -165,44 +166,27 @@ class _ToDoScreenState extends State<ToDoScreen> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Expanded(
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: () async {
-                                      var t = await _selectData(context);
-                                      setState(() {
-                                        selectedData = t;
-                                      });
+                              SelectDateItem(
+                                text: DateFormat('dd.MM.yyyy')
+                                    .format(selectedData),
+                                onTap: () async {
+                                  var t = await _selectData(context);
+                                  setState(
+                                    () {
+                                      selectedData = t;
                                     },
-                                    child: Text(
-                                      DateFormat('dd.MM.yyyy')
-                                          .format(selectedData),
-                                      style: MyTextStyle.interSemiBold600
-                                          .copyWith(
-                                              fontSize: 20,
-                                              color: MyColors.black),
-                                    ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
-                              Expanded(
-                                child: Center(
-                                  child: TextButton(
-                                    onPressed: () async {
-                                      var t = await _selectTime(context);
-                                      setState(() {
-                                        selectedTime = t;
-                                      });
-                                    },
-                                    child: Text(
-                                      "${selectedTime.hour}:${selectedTime.minute}",
-                                      style: MyTextStyle.interSemiBold600
-                                          .copyWith(
-                                              fontSize: 20,
-                                              color: MyColors.black),
-                                    ),
-                                  ),
-                                ),
+                              SelectDateItem(
+                                text:
+                                    "${selectedTime.hour}:${selectedTime.minute}",
+                                onTap: () async {
+                                  var t = await _selectTime(context);
+                                  setState(() {
+                                    selectedTime = t;
+                                  });
+                                },
                               ),
                               const Expanded(child: SizedBox()),
                               Row(
