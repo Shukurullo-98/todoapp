@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_todo_app/data/lolcal_data/storage.dart';
+import 'package:my_todo_app/data/local_data/storage.dart';
+import 'package:my_todo_app/data/repository.dart';
 import 'package:my_todo_app/presentation/login/login_screen/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -81,7 +82,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         controller.jumpToPage(currentPageIndex);
                       });
                     } else {
-                      await StorageRepository.putBool("is_initial", true);
+                      await MyRepository.addInitialValue();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (BuildContext context) {

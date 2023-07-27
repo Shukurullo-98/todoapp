@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_todo_app/models/category_moels.dart';
+import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/utils/colors.dart';
 import 'package:my_todo_app/utils/style.dart';
 
@@ -10,7 +10,7 @@ class CategoryItem extends StatelessWidget {
     required this.isSelected,
     required this.categoryModel,
   }) : super(key: key);
-  final CategoryModel categoryModel;
+  final CachedCategory categoryModel;
   final VoidCallback onTap;
   final bool isSelected;
 
@@ -25,7 +25,7 @@ class CategoryItem extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: categoryModel.categoryColor,
+              color: Color(categoryModel.categoryColor),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
@@ -33,7 +33,7 @@ class CategoryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    categoryModel.iconPath,
+                    IconData(categoryModel.iconPath, fontFamily: 'Inter-Medium'),
                     size: 34,
                     color: MyColors.white,
                   ),

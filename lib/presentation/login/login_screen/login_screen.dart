@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_todo_app/data/lolcal_data/storage.dart';
+import 'package:my_todo_app/data/local_data/storage.dart';
 import 'package:my_todo_app/presentation/login/register_screen/register_screen.dart';
 import 'package:my_todo_app/presentation/tabs/tab_box/tab_box.dart';
 import 'package:my_todo_app/utils/utility_functions.dart';

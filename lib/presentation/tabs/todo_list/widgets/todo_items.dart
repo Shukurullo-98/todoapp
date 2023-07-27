@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:my_todo_app/data/local_data/db/cached_category.dart';
+import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
+import 'package:my_todo_app/data/repository.dart';
 import 'package:my_todo_app/models/category_moels.dart';
-import 'package:my_todo_app/models/todo_model.dart';
 import 'package:my_todo_app/utils/colors.dart';
 import 'package:my_todo_app/utils/style.dart';
 
-
 class ToDoItem extends StatelessWidget {
   const ToDoItem(
-      {Key? key,
-      required this.todo,
-      required this.category,
-      required this.isDone,
-      required this.onTap})
+      {Key? key, required this.todo, required this.isDone, required this.onTap})
       : super(key: key);
 
-  final ToDoModel todo;
-  final CategoryModel category;
+  final CachedTodo todo;
   final VoidCallback onTap;
   final bool isDone;
 
@@ -42,7 +38,7 @@ class ToDoItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                todo.title,
+                todo.todoTitle,
                 style: MyTextStyle.interSemiBold600.copyWith(
                   fontSize: 20,
                   color: MyColors.black,
@@ -73,7 +69,7 @@ class ToDoItem extends StatelessWidget {
             children: [
               Expanded(
                   child: Text(
-                todo.description,
+                todo.todoDescription,
                 style: MyTextStyle.interRegular400
                     .copyWith(fontSize: 14, color: Colors.black45),
               ))
@@ -82,16 +78,28 @@ class ToDoItem extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Row(
-            children: [
-              const Text("Category"),
-              const SizedBox(
-                width: 20,
-              ),
-              Text(category.categoryName),
-              const Expanded(child: SizedBox()),
-              Icon(category.iconPath),
-            ],
+          FutureBuilder(
+            future: MyRepository.getSingleCategoryById(id: todo.categoryId),
+            builder:
+                (BuildContext context, AsyncSnapshot<CachedCategory> snapshot) {
+              if (snapshot.hasData) {
+                var category = snapshot.data!;
+                return Row(
+                  children: [
+                    const Text("Category"),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(category.categoryName),
+                    const Expanded(child: SizedBox()),
+                    Icon(IconData(category.iconPath,
+                        fontFamily: 'Inter-Medium')),
+                  ],
+                );
+              }else {
+                return const SizedBox();
+              }
+            },
           ),
           const SizedBox(
             height: 10,

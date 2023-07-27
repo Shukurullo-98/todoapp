@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:my_todo_app/data/lolcal_data/storage.dart';
+import 'package:my_todo_app/data/local_data/storage.dart';
 import 'package:my_todo_app/models/profile_model.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         lastName: "lastName",
         imagePath: imagePath,
         userAge: 25,
-        password: password);
+        password: password, userEmail: '');
   }
 
 

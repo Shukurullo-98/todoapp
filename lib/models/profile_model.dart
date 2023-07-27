@@ -5,6 +5,7 @@ class ProfileModel {
     required this.imagePath,
     required this.userAge,
     required this.password,
+    required this.userEmail,
   });
 
   final String firstName;
@@ -12,4 +13,5 @@ class ProfileModel {
   final String imagePath;
   final int userAge;
   final String password;
+  final String userEmail;
 }

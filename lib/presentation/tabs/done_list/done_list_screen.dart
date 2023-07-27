@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_todo_app/data/local_data/db/cached_category.dart';
+import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
-import 'package:my_todo_app/models/category_moels.dart';
-import 'package:my_todo_app/models/todo_model.dart';
-import 'package:my_todo_app/presentation/tabs/todo_list/todo_list_screen.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
 
 class DoneScreen extends StatefulWidget {
@@ -13,16 +12,23 @@ class DoneScreen extends StatefulWidget {
 }
 
 class _DoneScreenState extends State<DoneScreen> {
-  List<ToDoModel> myTodo = [];
-  List<CategoryModel> categories = [];
+  List<CachedTodo> myTodo = [];
+  List<CachedCategory> categories = [];
   bool isDone = false;
 
   @override
   void initState() {
-    myTodo = MyRepository.myTodo.where((element) => element.isDone).toList();
-    categories = MyRepository.categories;
+    _init();
     super.initState();
   }
+
+  void _init() async {
+    myTodo = await MyRepository.getAllCachedTodosByDone(isDone: 1);
+    categories = await MyRepository.getAllCachedCategories();
+    setState(() {});
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +40,7 @@ class _DoneScreenState extends State<DoneScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
-            myTodo =
-                MyRepository.myTodo.where((element) => element.isDone).toList();
+           _init();
           });
         },
         child: ListView(
@@ -43,10 +48,9 @@ class _DoneScreenState extends State<DoneScreen> {
             myTodo.length,
             (index) {
               var todo = myTodo[index];
-              var category = getCategory(categories, todo.categoryId);
+
               return ToDoItem(
                 todo: todo,
-                category: category,
                 isDone: true,
                 onTap: () {},
               );
