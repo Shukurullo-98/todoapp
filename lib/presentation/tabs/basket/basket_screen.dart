@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
+import 'package:my_todo_app/presentation/tabs/basket/widgets/basket_item.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
 
 class BasketScreen extends StatefulWidget {
@@ -44,17 +45,15 @@ class _BasketScreenState extends State<BasketScreen> {
         child: ListView(
           children: List.generate(
             deletedToDo.length,
-                (index) {
+            (index) {
               var todo = deletedToDo[index];
 
-              return ToDoItem(
-                todo: todo,
-                isDone: true,
-                onTap: () {},
-                onDelete: () {
+              return BasketItem(
+                onUpdateTapped: () {},
+                onDeleteTapped: () {
                   MyRepository.deleteCachedTodById(id: deletedToDo[index].id!);
-                  _init();
                 },
+                cachedTodo: deletedToDo[index],
               );
             },
           ),
