@@ -76,6 +76,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         key: "password", value: passwordController.text);
                     await StorageRepository.putString(
                         key: "age", value: ageController.text);
+                    await StorageRepository.putString(
+                        key: "user_email", value: "example@gmail.com");
                   }
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (BuildContext context) {

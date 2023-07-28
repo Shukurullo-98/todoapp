@@ -68,7 +68,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
 
   void _init() async {
     myTodo = await MyRepository.getAllCachedTodosByDone(isDone: 0);
-    categories =  await MyRepository.getAllCachedCategories();
+    categories = await MyRepository.getAllCachedCategories();
     setState(() {});
   }
 
@@ -94,193 +94,176 @@ class _ToDoScreenState extends State<ToDoScreen> {
                           topLeft: Radius.circular(16))),
                   context: context,
                   backgroundColor: Colors.white,
-                  builder: (context) =>
-                      SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height - 100,
-                        child: StatefulBuilder(
-                            builder: (BuildContext context, setState) {
-                              return Scaffold(
-                                resizeToAvoidBottomInset: false,
-                                body: Container(
-                                  margin: const EdgeInsets.all(16),
-                                  child: Column(
-                                    children: [
-                                      ModalTopView(
-                                          text: "Create new ToDo",
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          }),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: TextField(
-                                          controller: titleController,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: TextField(
-                                          controller: descriptionController,
-                                          maxLines: 5,
-                                          maxLength: 150,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                              hintText: 'Description here',
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(10),
-                                                  borderSide: BorderSide.none),
-                                              filled: true,
-                                              contentPadding: const EdgeInsets
-                                                  .all(8),
-                                              fillColor: const Color(
-                                                  0xFFD7D7D7)),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 95,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: categories.length,
-                                          itemBuilder: (BuildContext context,
-                                              index) {
-                                            return CategoryItem(
-                                              isSelected: categorySelected ==
-                                                  index,
-                                              categoryModel: categories[index],
-                                              onTap: () {
-                                                setState(() {
-                                                  categorySelected = index;
-                                                });
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      SelectUrgentLevel(
-                                          selectedStarsCount: urgentLevel,
-                                          onChanged: (v) {
-                                            urgentLevel = v;
-                                          }),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      SelectDateItem(
-                                        text: DateFormat('dd.MM.yyyy')
-                                            .format(selectedData),
-                                        onTap: () async {
-                                          var t = await _selectData(context);
-                                          setState(
-                                                () {
-                                              selectedData = t;
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      SelectDateItem(
-                                        text:
-                                        "${selectedTime.hour}:${selectedTime
-                                            .minute}",
-                                        onTap: () async {
-                                          var t = await _selectTime(context);
-                                          setState(() {
-                                            selectedTime = t;
-                                          });
-                                        },
-                                      ),
-                                      const Expanded(child: SizedBox()),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: MyCustomButton(
-                                              buttonText: 'Cancel',
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: MyCustomButton(
-                                              buttonText: 'Save',
-                                              onTap: () async {
-                                                String titleText = titleController
-                                                    .text;
-                                                String descriptionText =
-                                                    descriptionController.text;
-                                                if (titleText.length < 3) {
-                                                  UtilityFunctions.getMyToast(
-                                                      message: "Sarlavxani kiriting!");
-                                                } else
-                                                if (descriptionText.length <
-                                                    5) {
-                                                  UtilityFunctions.getMyToast(
-                                                      message: "Izox kiriting!");
-                                                } else
-                                                if (categorySelected < 0) {
-                                                  UtilityFunctions.getMyToast(
-                                                      message: "Kategoryani tanlang!");
-                                                } else if (urgentLevel == 0) {
-                                                  UtilityFunctions.getMyToast(
-                                                      message:
-                                                      "Muhimlilik darajasini tanlang!");
-                                                } else {
-                                                  var dateTime = DateTime(
-                                                    selectedData.year,
-                                                    selectedData.month,
-                                                    selectedData.day,
-                                                    selectedTime.hour,
-                                                    selectedTime.minute,
-                                                  );
-
-                                                  // ToDoModel toDoModel = ToDoModel(
-                                                  //     title: titleText,
-                                                  //     description: descriptionText,
-                                                  //     categoryId:
-                                                  //         categories[categorySelected]
-                                                  //             .categoryId,
-                                                  //     isDone: false,
-                                                  //     dateTime: dateTime.toString(),
-                                                  //     urgentLevel: urgentLevel);
-                                                  CachedTodo cachedTodo = CachedTodo(
-                                                    dateTime: dateTime
-                                                        .toString(),
-                                                    todoTitle: titleText,
-                                                    categoryId
-                                                        : categories[categorySelected]
-                                                        .id!,
-                                                    urgentLevel: urgentLevel,
-                                                    isDone
-                                                    : 0,
-                                                    todoDescription: descriptionText,);
-                                                  await MyRepository.insertCachedTodo(
-                                                      cachedTodo: cachedTodo);
-                                                  _init();
-                                                  setDefaults();
-                                                  Navigator.pop(context);
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                  builder: (context) => SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 100,
+                    child: StatefulBuilder(
+                        builder: (BuildContext context, setState) {
+                      return Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: Container(
+                          margin: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              ModalTopView(
+                                  text: "Create new ToDo",
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  }),
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: TextField(
+                                  controller: titleController,
                                 ),
-                              );
-                            }),
-                      ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: TextField(
+                                  controller: descriptionController,
+                                  maxLines: 5,
+                                  maxLength: 150,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                      hintText: 'Description here',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      contentPadding: const EdgeInsets.all(8),
+                                      fillColor: const Color(0xFFD7D7D7)),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 95,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: categories.length,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return CategoryItem(
+                                      isSelected: categorySelected == index,
+                                      categoryModel: categories[index],
+                                      onTap: () {
+                                        setState(() {
+                                          categorySelected = index;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              SelectUrgentLevel(
+                                  selectedStarsCount: urgentLevel,
+                                  onChanged: (v) {
+                                    urgentLevel = v;
+                                  }),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              SelectDateItem(
+                                text: DateFormat('dd.MM.yyyy')
+                                    .format(selectedData),
+                                onTap: () async {
+                                  var t = await _selectData(context);
+                                  setState(
+                                    () {
+                                      selectedData = t;
+                                    },
+                                  );
+                                },
+                              ),
+                              SelectDateItem(
+                                text:
+                                    "${selectedTime.hour}:${selectedTime.minute}",
+                                onTap: () async {
+                                  var t = await _selectTime(context);
+                                  setState(() {
+                                    selectedTime = t;
+                                  });
+                                },
+                              ),
+                              const Expanded(child: SizedBox()),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: MyCustomButton(
+                                      buttonText: 'Cancel',
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: MyCustomButton(
+                                      buttonText: 'Save',
+                                      onTap: () async {
+                                        String titleText = titleController.text;
+                                        String descriptionText =
+                                            descriptionController.text;
+                                        if (titleText.length < 3) {
+                                          UtilityFunctions.getMyToast(
+                                              message: "Sarlavxani kiriting!");
+                                        } else if (descriptionText.length < 5) {
+                                          UtilityFunctions.getMyToast(
+                                              message: "Izox kiriting!");
+                                        } else if (categorySelected < 0) {
+                                          UtilityFunctions.getMyToast(
+                                              message: "Kategoryani tanlang!");
+                                        } else if (urgentLevel == 0) {
+                                          UtilityFunctions.getMyToast(
+                                              message:
+                                                  "Muhimlilik darajasini tanlang!");
+                                        } else {
+                                          var dateTime = DateTime(
+                                            selectedData.year,
+                                            selectedData.month,
+                                            selectedData.day,
+                                            selectedTime.hour,
+                                            selectedTime.minute,
+                                          );
+
+                                          // ToDoModel toDoModel = ToDoModel(
+                                          //     title: titleText,
+                                          //     description: descriptionText,
+                                          //     categoryId:
+                                          //         categories[categorySelected]
+                                          //             .categoryId,
+                                          //     isDone: false,
+                                          //     dateTime: dateTime.toString(),
+                                          //     urgentLevel: urgentLevel);
+                                          CachedTodo cachedTodo = CachedTodo(
+                                            dateTime: dateTime.toString(),
+                                            todoTitle: titleText,
+                                            categoryId:
+                                                categories[categorySelected]
+                                                    .id!,
+                                            urgentLevel: urgentLevel,
+                                            isDone: 0,
+                                            todoDescription: descriptionText,
+                                          );
+                                          await MyRepository.insertCachedTodo(
+                                              cachedTodo: cachedTodo);
+                                          _init();
+                                          setDefaults();
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 );
               },
               icon: const Icon(Icons.add))
@@ -289,7 +272,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
       body: ListView(
         children: List.generate(
           myTodo.length,
-              (index) {
+          (index) {
             var todo = myTodo[index];
             return ToDoItem(
               todo: todo,
@@ -297,13 +280,15 @@ class _ToDoScreenState extends State<ToDoScreen> {
               onTap: () {
                 isDone = true;
                 setState(
-                      () {
+                  () {
                     isDone = false;
                     myTodo.removeAt(index);
-                    MyRepository.updateCachedTodoIsDone(id: todo.id!, isDone: 1);
+                    MyRepository.updateCachedTodoIsDone(
+                        id: todo.id!, isDone: 1);
                   },
                 );
               },
+              onDelete: () {},
             );
           },
         ),

@@ -28,10 +28,11 @@ class _TabBoxState extends State<TabBox> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
-      body: IndexedStack(
-        index: currentIndex,
-        children: screens,
-      ),
+      body: screens[currentIndex],
+      // IndexedStack(
+      //   index: currentIndex,
+      //   children: screens,
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {

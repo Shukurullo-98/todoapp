@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
-import 'package:my_todo_app/models/category_moels.dart';
 import 'package:my_todo_app/utils/colors.dart';
 import 'package:my_todo_app/utils/style.dart';
 
 class ToDoItem extends StatelessWidget {
-  const ToDoItem(
-      {Key? key, required this.todo, required this.isDone, required this.onTap})
-      : super(key: key);
+  const ToDoItem({
+    Key? key,
+    required this.todo,
+    required this.isDone,
+    required this.onTap,
+    required this.onDelete,
+  }) : super(key: key);
 
   final CachedTodo todo;
   final VoidCallback onTap;
   final bool isDone;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +100,7 @@ class ToDoItem extends StatelessWidget {
                         fontFamily: 'Inter-Medium')),
                   ],
                 );
-              }else {
+              } else {
                 return const SizedBox();
               }
             },
@@ -112,16 +116,23 @@ class ToDoItem extends StatelessWidget {
             ],
           ),
           TextButton(
-              onPressed: onTap,
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Finished"),
-                    Checkbox(value: isDone, onChanged: (v) {})
-                  ],
-                ),
+            onPressed: onTap,
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Finished"),
+                  Checkbox(value: isDone, onChanged: (v) {})
+                ],
+              ),
+            ),
+          ),
+          TextButton(
+              onPressed: onDelete,
+              child: const Icon(
+                Icons.delete,
+                color: Colors.red,
               ))
         ],
       ),

@@ -28,8 +28,6 @@ class _DoneScreenState extends State<DoneScreen> {
     setState(() {});
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +38,7 @@ class _DoneScreenState extends State<DoneScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
-           _init();
+            _init();
           });
         },
         child: ListView(
@@ -53,6 +51,10 @@ class _DoneScreenState extends State<DoneScreen> {
                 todo: todo,
                 isDone: true,
                 onTap: () {},
+                onDelete: () {
+                  MyRepository.updateCachedTodoIsDone(id: myTodo[index].id!, isDone: 2);
+                  _init();
+                },
               );
             },
           ),

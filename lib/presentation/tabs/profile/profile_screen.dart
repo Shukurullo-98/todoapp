@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_todo_app/data/local_data/storage.dart';
+import 'package:my_todo_app/data/repository.dart';
 import 'package:my_todo_app/models/profile_model.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,23 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _init() {
     imagePath = StorageRepository.getString("profile_image");
-    String password = StorageRepository.getString("password");
-    ProfileModel profileModel = ProfileModel(
-        firstName: "firstName",
-        lastName: "lastName",
-        imagePath: imagePath,
-        userAge: 25,
-        password: password, userEmail: '');
-  }
 
+  }
 
   bool isValidEmail({required String email}) {
     return RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email);
   }
-
-
 
   getFromGallery() async {
     imageFile = await _picker.pickImage(
@@ -79,47 +71,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text("Profile Screen"),
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                SizedBox(
-                  height: 150,
-                  width: 150,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: imagePath.isEmpty
-                        ? Image.asset(
-                            'assets/image/profile.jpg',
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(imagePath),
-                            fit: BoxFit.cover,
+      body: FutureBuilder<ProfileModel>(
+        future: MyRepository.getProfileModel(),
+        builder: (BuildContext context, AsyncSnapshot<ProfileModel> data) {
+          if (data.hasData) {
+            var profileModel = data.data!;
+            return SizedBox(
+              width: double.infinity,
+              child: Container(
+                margin: const EdgeInsets.all(24),
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          height: 150,
+                          width: 150,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: imagePath.isEmpty
+                                ? Image.asset(
+                                    'assets/image/profile.jpg',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(imagePath),
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: TextButton(
-                    onPressed: () {
-                      selectImageDialog(context);
-                    },
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.blue,
-                      size: 30,
+                        ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: TextButton(
+                            onPressed: () {
+                              selectImageDialog(context);
+                            },
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Username: "),
+                        Text(profileModel.firstName),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Last name: "),
+                        Text(profileModel.lastName),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Age: "),
+                        Text(profileModel.userAge.toString()),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Email: "),
+                        Text(profileModel.userEmail),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            );
+          } else if (data.hasError) {
+            return const Center(
+              child: Text('Error occurred'),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

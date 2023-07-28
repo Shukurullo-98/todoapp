@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_todo_app/data/local_data/db/cached_category.dart';
+import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
+import 'package:my_todo_app/data/repository.dart';
+import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
 
 class BasketScreen extends StatefulWidget {
   const BasketScreen({Key? key}) : super(key: key);
@@ -8,14 +12,53 @@ class BasketScreen extends StatefulWidget {
 }
 
 class _BasketScreenState extends State<BasketScreen> {
+  List<CachedTodo> deletedToDo = [];
+  List<CachedCategory> categories = [];
+  bool isDone = false;
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  void _init() async {
+    deletedToDo = await MyRepository.getAllCachedTodosByDone(isDone: 2);
+    categories = await MyRepository.getAllCachedCategories();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Basket Screen"),
+        title: const Text("ToDo Screen"),
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
       ),
-      body: const Column(
-        children: [Text("Under development")],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() {
+            _init();
+          });
+        },
+        child: ListView(
+          children: List.generate(
+            deletedToDo.length,
+                (index) {
+              var todo = deletedToDo[index];
+
+              return ToDoItem(
+                todo: todo,
+                isDone: true,
+                onTap: () {},
+                onDelete: () {
+                  MyRepository.deleteCachedTodById(id: deletedToDo[index].id!);
+                  _init();
+                },
+              );
+            },
+          ),
+        ),
       ),
     );
   }
