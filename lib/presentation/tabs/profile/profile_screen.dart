@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_todo_app/data/local_data/storage.dart';
 import 'package:my_todo_app/data/repository.dart';
 import 'package:my_todo_app/models/profile_model.dart';
+import 'package:my_todo_app/presentation/tabs/profile/sub_screen/settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -26,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _init() {
     imagePath = StorageRepository.getString("profile_image");
-
   }
 
   bool isValidEmail({required String email}) {
@@ -69,6 +70,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return const SettingsScreen();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Rostdan xam chiqmoqchimisiz"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          MyRepository.logUserOut();
+                          _init();
+                          SystemNavigator.pop;
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
         title: const Text("Profile Screen"),
       ),
       body: FutureBuilder<ProfileModel>(

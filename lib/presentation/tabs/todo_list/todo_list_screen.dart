@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:my_todo_app/category_add_screen/category_add_screen.dart';
 import 'package:my_todo_app/data/global_widgets/my_custom_widgets.dart';
+import 'package:my_todo_app/data/global_widgets/profile_image_appbar.dart';
 import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
@@ -11,7 +13,10 @@ import 'package:my_todo_app/presentation/tabs/todo_list/widgets/modal_top_view.d
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/select_date_item.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/select_urgent_level.dart';
 import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
+import 'package:my_todo_app/utils/colors.dart';
+import 'package:my_todo_app/utils/style.dart';
 import 'package:my_todo_app/utils/utility_functions.dart';
+import 'dart:io';
 
 class ToDoScreen extends StatefulWidget {
   const ToDoScreen({Key? key}) : super(key: key);
@@ -83,8 +88,53 @@ class _ToDoScreenState extends State<ToDoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: const Text("ToDo Screen"),
+        leading: const ProfileImageAppBar(),
         actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return CategoryAddScreen(
+                      onCategoryAddedListener: (value) {
+                        if(value){
+                          _init();
+                        }
+                      },
+                    );
+                  },
+                ),
+              );
+              // showDialog(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return Dialog(
+              //       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+              //       child: Container(
+              //         padding: EdgeInsets.all(16),
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           borderRadius: BorderRadius.circular(16),
+              //         ),
+              //         height: 350,
+              //         width: double.infinity,
+              //         child: Column(children: [
+              //           TextField(),
+              //           Container(height: 100,child: ListView(),)
+              //         ],),
+              //       ),
+              //     );
+              //   },
+              // );
+            },
+            child: Text(
+              "Add category",
+              style: MyTextStyle.interBold700.copyWith(color: MyColors.white),
+            ),
+          ),
           IconButton(
               onPressed: () {
                 showCupertinoModalBottomSheet(
@@ -278,17 +328,21 @@ class _ToDoScreenState extends State<ToDoScreen> {
               todo: todo,
               isDone: isDone,
               onTap: () {
-                isDone = true;
                 setState(
                   () {
-                    isDone = false;
                     myTodo.removeAt(index);
                     MyRepository.updateCachedTodoIsDone(
                         id: todo.id!, isDone: 1);
                   },
                 );
               },
-              onDelete: () {},
+              onDelete: () {
+                MyRepository.updateCachedTodoIsDone(
+                  isDone: 2,
+                  id: myTodo[index].id!,
+                );
+                _init();
+              },
             );
           },
         ),

@@ -58,6 +58,13 @@ class MyRepository {
     );
   }
 
+
+  static Future<void> logUserOut ()async{
+    await StorageRepository.putBool('is_logged', false);
+    await clearAllCachedTodos();
+    await clearAllCachedCategories();
+  }
+
   // ------------------------------------Local DB side---------------------------------
 
 //  -----------------------------------TO DO------------------------------------------

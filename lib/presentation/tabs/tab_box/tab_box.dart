@@ -1,4 +1,5 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_todo_app/presentation/tabs/basket/basket_screen.dart';
 import 'package:my_todo_app/presentation/tabs/done_list/done_list_screen.dart';
@@ -39,14 +40,17 @@ class _TabBoxState extends State<TabBox> {
             currentIndex = index;
           });
         },
+        backgroundColor: Colors.blue,
+        selectedItemColor: Colors.blue.shade50,
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         // showSelectedLabels: false,
         // showUnselectedLabels: false,
         items: [
-          getItem(icon: Icons.add_task_outlined, labelText: "Todos"),
-          getItem(icon: Icons.done_all, labelText: 'Done'),
-          getItem(icon: Icons.delete, labelText: "Basket"),
-          getItem(icon: Icons.perm_identity_rounded, labelText: "Profile"),
+          getItem(icon: Icons.add_task_outlined, labelText: tr("todos")),
+          getItem(icon: Icons.done_all, labelText: tr('done')),
+          getItem(icon: Icons.delete, labelText: tr("basket")),
+          getItem(icon: Icons.perm_identity_rounded, labelText: tr("profile")),
         ],
       ),
     );
@@ -60,7 +64,7 @@ BottomNavigationBarItem getItem(
     label: labelText,
     activeIcon: Icon(
       icon,
-      color: Colors.green,
+      color: Colors.blue.shade50,
     ),
   );
 }

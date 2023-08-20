@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_todo_app/data/global_widgets/profile_image_appbar.dart';
 import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
 import 'package:my_todo_app/presentation/tabs/basket/widgets/basket_item.dart';
-import 'package:my_todo_app/presentation/tabs/todo_list/widgets/todo_items.dart';
 
 class BasketScreen extends StatefulWidget {
   const BasketScreen({Key? key}) : super(key: key);
@@ -33,8 +33,41 @@ class _BasketScreenState extends State<BasketScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ToDo Screen"),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        backgroundColor: Colors.blue,
+        title: const Text("Basket Screen"),
+        leading: const ProfileImageAppBar(),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Rostdan xam barchasini o'chirmoqchimisiz"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {Navigator.pop(context);},
+                        child: Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          MyRepository.clearAllCachedTodos();
+                          _init();
+                           Navigator.pop(context);
+                        },
+                        child: Text("OK"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.clear,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -46,12 +79,31 @@ class _BasketScreenState extends State<BasketScreen> {
           children: List.generate(
             deletedToDo.length,
             (index) {
-              var todo = deletedToDo[index];
-
               return BasketItem(
                 onUpdateTapped: () {},
-                onDeleteTapped: () {
-                  MyRepository.deleteCachedTodById(id: deletedToDo[index].id!);
+                onDeleteTapped: () {showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Rostdan xam o'chirmoqchimisiz"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {Navigator.pop(context);},
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            MyRepository.deleteCachedTodById(id: deletedToDo[index].id!);
+                            _init();
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+
                 },
                 cachedTodo: deletedToDo[index],
               );

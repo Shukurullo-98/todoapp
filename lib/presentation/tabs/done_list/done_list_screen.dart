@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_todo_app/data/global_widgets/profile_image_appbar.dart';
 import 'package:my_todo_app/data/local_data/db/cached_category.dart';
 import 'package:my_todo_app/data/local_data/db/cached_todo.dart';
 import 'package:my_todo_app/data/repository.dart';
@@ -32,7 +33,9 @@ class _DoneScreenState extends State<DoneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ToDo Screen"),
+        backgroundColor: Colors.blue,
+        title: const Text("Done Screen"),
+        leading: const ProfileImageAppBar(),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
       ),
       body: RefreshIndicator(

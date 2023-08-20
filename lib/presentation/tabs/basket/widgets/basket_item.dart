@@ -18,14 +18,15 @@ class BasketItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
+        color: MyColors.white,
         boxShadow: [
           BoxShadow(
             spreadRadius: 5,
-            offset: Offset(1, 3),
+            offset: const Offset(1, 3),
             blurRadius: 5,
             color: Colors.grey.shade300,
           ),
@@ -46,14 +47,14 @@ class BasketItem extends StatelessWidget {
               const Expanded(child: SizedBox()),
               ...List.generate(
                 cachedTodo.urgentLevel,
-                    (index) => const Icon(
+                (index) => const Icon(
                   Icons.star,
                   color: Colors.yellow,
                 ),
               ),
               ...List.generate(
                 5 - cachedTodo.urgentLevel,
-                    (index) => const Icon(
+                (index) => const Icon(
                   Icons.star,
                   color: Colors.grey,
                 ),
@@ -67,17 +68,19 @@ class BasketItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                  child: Text(
-                    cachedTodo.todoDescription,
-                    style: MyTextStyle.interRegular400
-                        .copyWith(fontSize: 14, color: Colors.black45),
-                  ))
+                child: Text(
+                  cachedTodo.todoDescription,
+                  style: MyTextStyle.interRegular400
+                      .copyWith(fontSize: 14, color: Colors.black45),
+                ),
+              ),
             ],
           ),
           const SizedBox(
             height: 10,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
                 onPressed: onUpdateTapped,
@@ -86,7 +89,7 @@ class BasketItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.edit,
-                        color: Colors.red,
+                        color: Colors.blue,
                       ),
                       SizedBox(
                         width: 20,
@@ -103,7 +106,7 @@ class BasketItem extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.delete,
-                        color: Colors.blue,
+                        color: Colors.red,
                       ),
                       SizedBox(
                         width: 20,

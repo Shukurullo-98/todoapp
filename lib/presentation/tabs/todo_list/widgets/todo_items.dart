@@ -96,8 +96,9 @@ class ToDoItem extends StatelessWidget {
                     ),
                     Text(category.categoryName),
                     const Expanded(child: SizedBox()),
-                    Icon(IconData(category.iconPath,
-                        fontFamily: 'Inter-Medium')),
+                    Icon(
+                      IconData(category.iconPath, fontFamily: 'MaterialIcons'),
+                    ),
                   ],
                 );
               } else {
@@ -129,11 +130,12 @@ class ToDoItem extends StatelessWidget {
             ),
           ),
           TextButton(
-              onPressed: onDelete,
-              child: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ))
+            onPressed: onDelete,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.red,
+            ),
+          ),
         ],
       ),
     );
